@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var questionNum = 1
     @State private var score = 0
     @State private var showingScore = false
+    @State private var showingFinalResults = false
     @State private var scoreTitle = ""
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
     @State private var correctAnswer = Int.random(in: 0...2)
@@ -37,7 +39,7 @@ struct ContentView: View {
                         Text(countries[correctAnswer])
                             .font(.largeTitle.weight(.semibold))
                     }
-                    
+
                     ForEach(0..<3) { number in
                         Button {
                             flagTapped(number)
@@ -56,9 +58,12 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                Text("Score: \(score)")
-                    .font(.title.bold())
-                    .foregroundColor(.white)
+                VStack {
+                    Text("Question \(questionNum)/8")
+                    Text("Score: \(score)")
+                }
+                .font(.title.bold())
+                .foregroundColor(.white)
                 
                 Spacer()
             }
@@ -68,6 +73,11 @@ struct ContentView: View {
             Button("Continue", action: askQuestion)
         } message: {
             Text("Your score is \(score)")
+        }
+        .alert("Game Over", isPresented: $showingFinalResults) {
+            Button("GG!", action: resetGame)
+        } message: {
+            Text("Your final score is: \(score)/8")
         }
     }
     
@@ -79,12 +89,25 @@ struct ContentView: View {
             scoreTitle = "Wrong! That's the flag of \(countries[number])"
         }
         
-        showingScore = true
+        questionNum += 1
+        
+        if questionNum == 8 { // last question, show result and end the game
+            showingFinalResults = true
+        } else {
+            showingScore = true
+        }
+        
     }
     
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+    }
+    
+    func resetGame() {
+        score = 0
+        questionNum = 1
+        askQuestion()
     }
 }
 
