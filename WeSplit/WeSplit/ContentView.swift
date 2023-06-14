@@ -55,8 +55,11 @@ struct ContentView: View {
                 
                 Section {
                     Text(totalPerPerson, format: .currency(code: Locale.current.currencyCode ?? "USD"))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                         .focused($amountIsFocused)
+                        .background(tipPercentage == 0 ? Color.red : Color.white)
                 }
+                
             }
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
