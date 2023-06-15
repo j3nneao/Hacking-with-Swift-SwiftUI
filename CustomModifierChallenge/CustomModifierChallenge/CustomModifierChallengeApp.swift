@@ -1,0 +1,17 @@
+//
+//  CustomModifierChallengeApp.swift
+//  CustomModifierChallenge
+//
+//  Created by Jenn Park on 2023-06-15.
+//
+
+import SwiftUI
+
+@main
+struct CustomModifierChallengeApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+    }
+}
