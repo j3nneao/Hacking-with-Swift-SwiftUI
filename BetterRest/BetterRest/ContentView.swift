@@ -26,24 +26,22 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             Form {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("When do you want to wake up?")
-                        .font(.headline)
+                Section(header: Text("When do you want to wake up?")) {
                     DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
                         .labelsHidden()
                 }
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Desired amount of sleep")
-                        .font(.headline)
+                
+                Section(header: Text("Desired amount of sleep")) {
                     Stepper("\(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
                 }
                 
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Daily coffee intake")
-                        .font(.headline)
-                    Stepper(coffeeAmount == 1 ? "1 cup" : "\(coffeeAmount) cups",
-                            value: $coffeeAmount,
-                            in: 1...20)
+                Section(header: Text("Daily coffee intake")) {
+                    Picker("Coffee", selection: $coffeeAmount) {
+                        ForEach(1...20, id: \.self) { amount in
+                            Text(String(amount))
+                        }
+                    }
+                    .pickerStyle(.wheel)
                 }
             }
             .navigationBarTitle("BetterRest")
