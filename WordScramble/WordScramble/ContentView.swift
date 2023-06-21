@@ -40,6 +40,13 @@ struct ContentView: View {
             } message: {
                 Text(errorMessage)
             }
+            .toolbar {
+                ToolbarItem(placement: .bottomBar) {
+                    Button("Restart") {
+                        startGame()
+                    }
+                }
+            }
         }
     }
     
@@ -47,6 +54,14 @@ struct ContentView: View {
         let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         
         guard answer.count > 0 else { return }
+        guard answer.count > 3 else {
+            wordError(title: "Word is too short!", message: "Choose a word with more than 3 letters")
+            return
+        }
+        guard answer != rootWord else {
+            wordError(title: "Root word not allowed", message: "Submit a word that's not the given original word")
+            return
+        }
         guard isOriginal(word: answer) else {
             wordError(title: "Word used already", message: "Be more original!")
             return
@@ -72,6 +87,7 @@ struct ContentView: View {
             if let fileContents = try? String(contentsOf: fileURL) {
                 let allWords = fileContents.components(separatedBy: "\n")
                 rootWord = allWords.randomElement() ?? "silkworm"
+                usedWords = []
                 return
             }
         }
