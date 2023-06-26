@@ -14,20 +14,9 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List {
-                // Dynamic View so Swift needs to know how to identify them
-                ForEach(expenses.items) { item in
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(item.name)
-                                .font(.headline)
-                            Text(item.type)
-                        }
-                        
-                        Spacer()
-                        Text(item.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                    }
-                }
-                .onDelete(perform: removeItems)
+                ExpenseSection(title: "Personal", expenses: expenses.personalItems, deleteItems: {offsets in removeItems(at: offsets, in: expenses.personalItems)})
+                
+                ExpenseSection(title: "Business", expenses: expenses.businessItems, deleteItems: {offsets in removeItems(at: offsets, in: expenses.businessItems)})
             }
             .navigationTitle("iExpense")
             .toolbar {
@@ -43,8 +32,24 @@ struct ContentView: View {
         }
     }
     
-    func removeItems(at offsets: IndexSet) {
-        expenses.items.remove(atOffsets: offsets)
+    func removeItems(at offsets: IndexSet, in inputArray: [ExpenseItem]) {
+        var itemsToDelete = IndexSet()
+        
+        for offset in offsets {
+            let item = inputArray[offset]
+            
+            if let index = expenses.items.firstIndex(of: item) {
+                itemsToDelete.insert(index)
+            }
+        }
+        
+        expenses.items.remove(atOffsets: itemsToDelete)
+    }
+}
+
+extension FormatStyle where Self== FloatingPointFormatStyle<Double>.Currency {
+    static var localCurrency: Self {
+        .currency(code: Locale.current.currency?.identifier ?? "USD")
     }
 }
 

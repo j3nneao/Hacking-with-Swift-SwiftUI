@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ExpenseItem: Identifiable, Codable {
+struct ExpenseItem: Identifiable, Codable, Equatable {
     var id = UUID()
     let name: String
     let type: String
@@ -22,6 +22,15 @@ class Expenses: ObservableObject {
             }
         }
     }
+    
+    var personalItems: [ExpenseItem] {
+        items.filter { $0.type == "Personal" }
+    }
+    
+    var businessItems: [ExpenseItem] {
+        items.filter { $0.type == "Business"}
+    }
+    
     
     init() {
         if let savedItems = UserDefaults.standard.data(forKey: "Items") {
