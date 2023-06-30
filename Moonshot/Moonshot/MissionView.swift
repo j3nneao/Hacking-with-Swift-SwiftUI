@@ -38,22 +38,23 @@ struct MissionView: View {
                         .frame(maxWidth: geometry.size.width * 0.6)
                         .padding(.top)
                     
-                    Rectangle()
-                        .frame(height: 2)
-                        .foregroundColor(.lightBackground)
-                        .padding(.vertical)
+                    CustomDivider()
                     
                     VStack(alignment: .leading) {
+                        HStack {
+                            Text("Launch Date:")
+                                .font(.headline)
+                            
+                            Text(mission.formattedLaunchDate)
+                        }
+                        
                         Text("Mission Highlights")
                             .font(.title.bold())
-                            .padding(.bottom, 5)
+                            .padding(.vertical, 5)
                         
                         Text(mission.description)
                         
-                        Rectangle()
-                            .frame(height: 2)
-                            .foregroundColor(.lightBackground)
-                            .padding(.vertical)
+                        CustomDivider()
                         
                         Text("Crew")
                             .font(.title.bold())
