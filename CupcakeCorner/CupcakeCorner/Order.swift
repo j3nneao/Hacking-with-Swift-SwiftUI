@@ -7,14 +7,25 @@
 
 import Foundation
 
-
+@dynamicMemberLookup
 class SharedOrder: ObservableObject {
     static let types = ["Vanilla", "Strawberry", "Chocolate", "Rainbow"]
     @Published var data = Order()
     
-    enum CodingKeys: CodingKey {
-        case type, quantity, extraFrosting, addSprinkles, name, streetAddress, city, zip
+    subscript<T>(dynamicMember keyPath: KeyPath<Order, T>) -> T {
+        data[keyPath: keyPath]
     }
+    
+    subscript<T>(dynamicMember keyPath: WritableKeyPath<Order, T>) -> T {
+        get {
+            data[keyPath: keyPath]
+        }
+        
+        set {
+            data[keyPath: keyPath] = newValue
+        }
+    }
+
 }
 
 struct Order: Codable {
@@ -60,6 +71,10 @@ struct Order: Codable {
         }
         
         return cost
+    }
+    
+    enum CodingKeys: CodingKey {
+        case type, quantity, extraFrosting, addSprinkles, name, streetAddress, city, zip
     }
 }
 
