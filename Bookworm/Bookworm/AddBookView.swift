@@ -10,11 +10,14 @@ import SwiftUI
 struct AddBookView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var moc
+    var isValidBook = false
+    
     @State private var title = ""
     @State private var author = ""
     @State private var rating = 3
     @State private var genre = ""
     @State private var review = ""
+    
     let genres = ["Fantasy", "Horror", "Kids", "Mystery", "Poetry", "Romance", "Thriller"]
     
     var body: some View {
@@ -49,12 +52,21 @@ struct AddBookView: View {
                         newBook.review = review
                         
                         try? moc.save()
+                        
                         dismiss()
                     }
                 }
+                .disabled(validateInput() == false)
             }
             .navigationTitle("Add Book")
         }
+    }
+    
+    func validateInput() -> Bool {
+        if title.isEmpty || author.isEmpty || genre.isEmpty {
+            return false
+        }
+        return true
     }
 }
 
